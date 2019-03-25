@@ -19,11 +19,17 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
 
     private List<Photo> mPhotos;
     private Context mContext;
+    private final ItemClickListener mItemClickListener;
 
-    PhotoAdapter(List<Photo> photos, Context context) {
+    PhotoAdapter(List<Photo> photos, Context context, ItemClickListener clickListener) {
         mPhotos = photos;
         mContext = context;
+        mItemClickListener = clickListener;
+    }
 
+    //Interface for click handling
+    public interface ItemClickListener {
+        void onItemClickListener (Photo photo);
     }
 
     @NonNull
@@ -53,7 +59,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
         return mPhotos.size();
     }
 
-    static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView imageView;
         private TextView textView;
 
@@ -61,6 +67,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.MyViewHolder
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             textView = itemView.findViewById(R.id.textView_title);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            mItemClickListener.onItemClickListener(mPhotos.get(position));
         }
     }
 

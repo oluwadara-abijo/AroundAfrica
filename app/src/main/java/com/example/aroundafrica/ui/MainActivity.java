@@ -1,5 +1,6 @@
 package com.example.aroundafrica.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +23,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity {
+import static com.example.aroundafrica.ui.DetailActivity.PHOTO_EXTRA;
+
+public class MainActivity extends AppCompatActivity implements PhotoAdapter.ItemClickListener {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new PhotoAdapter(mList, this);
+        mAdapter = new PhotoAdapter(mList, this, this);
         recyclerView.setAdapter(mAdapter);
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -75,5 +78,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onItemClickListener(Photo photo) {
+        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+        intent.putExtra(PHOTO_EXTRA, photo);
+        startActivity(intent);
     }
 }
